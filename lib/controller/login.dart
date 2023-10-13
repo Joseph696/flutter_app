@@ -30,7 +30,7 @@ class LoginController with ChangeNotifier {
         final responseLogin = jsonDecode(response.body);
         print("Success");
         Get.to(
-            ProfileDetailScreen()); // if connected successfull it will go to loginScreen
+            const ProfileDetailScreen()); 
       } else {
         throw Exception();
       }

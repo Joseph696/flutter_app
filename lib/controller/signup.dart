@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:js';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/utils/exports.dart';
 
@@ -16,31 +18,42 @@ class SignUpController with ChangeNotifier {
   bool get showpassword => _showpassword;
   bool get showcnfrmpassword => _showcnfrmpassword;
 
-
   Future<void> EmailRegistration() async {
-   final response = await http.post(Uri.parse('http://trial.weberfox.in/task/api/user-signup'),
-    
-    body: {
+    final response = await http.post(
+      Uri.parse('http://trial.weberfox.in/task/api/user-signup'),
+      body: {
         "name": name.text,
         "username": username.text,
-        "email": email.text,
+        "email": email.text.trim(),
         "phone_number": phone.text,
         "password": password.text,
-        "ConfirmPassword":confirmpassword.text,
+        "ConfirmPassword": confirmpassword.text,
       },
     );
-    try{
-       if(response.statusCode == 200){
+    try {
+      if (response.statusCode == 200) {
         final responseSignUp = jsonDecode(response.body);
         print("Succesful!");
         Get.to(LoginScreen());
-         }else{
-      throw Exception();
+      } else {
+        throw Exception();
+      }
+    } catch (error) {
+      Get.back();
+      showDialog(
+          context: Get.context!,
+          builder: (context) {
+            return SimpleDialog(
+              title: Text("Error"),
+              contentPadding: EdgeInsets.all(15),
+              children: [
+                Text(error.toString()),
+              ],
+            );
+          });
+      //print(error);
     }
-    }catch(error){
-      print(error);
-    }
-  } 
+  }
 
   void changeShowPassword() {
     _showpassword = !showpassword;
